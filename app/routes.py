@@ -56,6 +56,7 @@ async def setup_learner():
 
 @app.route('/')
 def index():
+	print("1")
 	return render_template('index.html', pub_key=pub_key)
 
 
@@ -70,6 +71,7 @@ def allowed_file(filename):
 
 @app.route('/predict', methods=['POST', 'GET'])
 def predict():
+	print("2")
 	if 'file' not in request.files:
 		return render_template('image_upload.html', predictions=[])
 	
