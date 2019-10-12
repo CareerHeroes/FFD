@@ -5,6 +5,8 @@ import os # Import to get files
 from dotenv import load_dotenv # Import to load production.env file
 from model_deploy import * # Import to build the model and predict a image
 import tensorflow as tf # Import to build the graph for the model
+from fastai import *
+from fastai.vision import *
 
 
 model = build_model() # Build the model with the specific json and h5 weights file
