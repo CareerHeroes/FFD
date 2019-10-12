@@ -1,5 +1,6 @@
 flask
 gunicorn
+pickle
 stripe
 tensorflow==1.14
 keras==2.2.5
