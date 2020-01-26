@@ -5,9 +5,10 @@ import os # Import to get files
 from dotenv import load_dotenv # Import to load production.env file
 from model_deploy import * # Import to build the model and predict a image
 import tensorflow as tf # Import to build the graph for the model
+from fastai import *
+from fastai.vision import *
+import pickle
 
-
-model = build_model() # Build the model with the specific json and h5 weights file
 graph = tf.get_default_graph() # Get the default graph from tensorflow
 
 # Load Environment Variables File
@@ -25,30 +26,8 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 # Defining the model labels
 labels = ['fake', 'real']
 
-export_file_url = 'https://drive.google.com/uc?export=download&id=1-Rlv4jsQa0XGsDNMvadntQhQj5r93sj-'
-export_file_name = 'export.pkt'
-
-async def download_file(url, dest):
-    if dest.exists(): return
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-            data = await response.read()
-            with open(dest, 'wb') as f:
-                f.write(data)
-
-
-async def setup_learner():
-    await download_file(export_file_url, path / export_file_name)
-    try:
-        learn = load_learner(path, export_file_name)
-        return learn
-    except RuntimeError as e:
-        if len(e.args) > 0 and 'CPU-only machine' in e.args[0]:
-            print(e)
-            message = "\n\nThis model was trained with an old version of fastai and will not work in a CPU environment.\n\nPlease update the fastai library in your training environment and export your model again.\n\nSee instructions for 'Returning to work' at https://course.fast.ai."
-            raise RuntimeError(message)
-        else:
-            raise
+learner_pickle = pickle.load( open( "export.pkt", "rb" ) )
+learn = learn.load(learner_pickle)
 
 
 
